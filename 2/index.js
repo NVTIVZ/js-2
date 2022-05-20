@@ -6,9 +6,16 @@ const names = pipe(
   flatten,
   map(({ name }) => name)
 )(first);
+
 const getRandomName = () => names[Math.floor(Math.random() * names.length)];
+
 const getRandomTimeout = () => (Math.random() + 1) * 1000;
+
 const getRandomScore = () => Math.floor(Math.random() * 20);
+
+const generateRandomNames = (length) =>
+  Array.from({ length }, () => getRandomName());
+
 const delay = () =>
   new Promise((resolve) => setTimeout(resolve, getRandomTimeout()));
 
@@ -23,16 +30,13 @@ const getPromise = async (nameFn, resolveFn) => {
 };
 
 const getPlayers = (players) =>
-  getPromise(
-    "getPlayers",
-    Array.from({ length: players }, () => getRandomName())
-  );
+  getPromise("getPlayers", generateRandomNames(players));
 
 const getTeams = (teams, players) =>
   getPromise(
     "getTeams",
     Array.from({ length: teams }, () => ({
-      names: Array.from({ length: players }, () => getRandomName()),
+      names: generateRandomNames(players),
       score: getRandomScore(),
     }))
   );
